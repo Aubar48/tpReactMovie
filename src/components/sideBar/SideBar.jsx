@@ -1,5 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 export const SideBar = () => {
+  const { pathname } = useLocation();
+
+  
+
   return (
     <ul
       className="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion"
@@ -32,14 +36,14 @@ export const SideBar = () => {
       <div className="sidebar-heading">Actions</div>
 
       <li className="nav-item">
-        <Link className="nav-link collapsed" to="/">
+        <Link className={`nav-link ${pathname === '/' && 'active'}`} to="/">
           <i className="fas fa-fw fa-folder"></i>
           <span>Home</span>
         </Link>
       </li>
 
       <li className="nav-item">
-        <Link className="nav-link" to="/movies/list">
+        <Link className={`nav-link ${pathname === '/movie/list' && 'active'}`} to="/movies/list">
           <i className="fas fa-fw fa-chart-area"></i>
           <span>Peliculas</span>
         </Link>

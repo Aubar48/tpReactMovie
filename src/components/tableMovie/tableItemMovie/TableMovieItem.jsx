@@ -1,33 +1,26 @@
 import { PropTypes } from "prop-types";
-export const TableMovieItem = ({ Title, Duration, Raiting, Genre, Awards }) => {
+export const TableMovieItem = ({ title, length, rating, genre, awards }) => {
   return (
     <tr>
-      <td> {Title} </td>
-      <td> {Duration} </td>
-      <td> {Raiting} </td>
-      <td>
-        <ul>
-          { Genre && Genre.map((genres, index) => (
-            <li key={index}> {genres} </li>
-          ))}
-        </ul>
-      </td>
-      <td> {Awards} </td>
+      <td> {title ? title : "Not Title"} </td>
+      <td> {length ? length + " Min" : "Not Length"} </td>
+      <td> {rating ? rating : "Not Rating"} </td>
+      <td> {genre ? genre.name : "Not Genre"} </td>
+      <td> {awards ? awards : "Not Awards"} </td>
     </tr>
   );
 };
 TableMovieItem.propTypes = {
-  Title: PropTypes.string,
-  Duration: PropTypes.number,
-  Raiting: PropTypes.number,
-  Genre:PropTypes.array,
-  Awards: PropTypes.number,
+  title: PropTypes.string,
+  length: PropTypes.number,
+  rating: PropTypes.string, // Puede cambiar a PropTypes.number si `rating` es siempre un número
+  genre: PropTypes.shape({
+    name: PropTypes.string,
+  }),
+  awards: PropTypes.number,
 };
 
+
 TableMovieItem.defaultProps = {
-    Title: "Sin titulo",
-    Duration: 0,
-    Raiting: 0,
-    Genre: "Sin genero",
-    Awards: 0,
-  };
+  genre: "Sin género asignado",
+};
