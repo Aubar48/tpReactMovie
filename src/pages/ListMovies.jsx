@@ -1,10 +1,11 @@
-import { Card } from "react-bootstrap";
+import { Card, Row, Col } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { TableMovieItem } from "../components/tableMovie/tableItemMovie/TableMovieItem";
 import { useEffect, useState } from "react";
 import { Loading } from "./../components/loading/Loading";
 import { Paginator } from "../components/paginator/Paginator";
 import { FormSearch } from "../components/formSearch/FormSearch";
+import { FormMovies } from "../components/formMovies/FormMovies";
 export const ListMovies = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,39 +35,52 @@ export const ListMovies = () => {
   return loading ? (
     <Loading />
   ) : (
-    <Card className="shadow mb-5">
-      <Card.Body>
-        <div className="d-flex justify-content-between">
-          <FormSearch getMovies={getMovies} />
-          <Paginator
-            pagination={pagination}
-            handlePagination={handlePagination}
-          />
-        </div>
-        <Table striped borderless>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Length</th>
-              <th>Rating</th>
-              <th>Genre</th>
-              <th>Awards</th>
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map(({ id, title, length, rating, genre, awards }) => (
-              <TableMovieItem
-                key={id}
-                title={title}
-                length={length}
-                rating={rating}
-                genre={genre}
-                awards={awards}
+    <Row>
+      <Col sm={12} md={8} lg={4}>
+        <Card.Header>
+          <Card.Title>Add Movie</Card.Title>
+        </Card.Header>
+        <Card.Body>
+          <FormMovies />
+        </Card.Body>
+      </Col>
+      <Col sm={12} md={10} lg={8}>
+        <Card className="shadow mb-5">
+          <Card.Body>
+            <div className="d-flex flex-column flex-nowrap flex-lg-row justify-content-between">
+              <FormSearch getMovies={getMovies} />
+              <Paginator
+                pagination={pagination}
+                handlePagination={handlePagination}
               />
-            ))}
-          </tbody>
-        </Table>
-      </Card.Body>
-    </Card>
+            </div>
+            <Table striped borderless responsive>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Length</th>
+                  <th>Rating</th>
+                  <th>Genre</th>
+                  <th>Awards</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {movies.map(({ id, title, length, rating, genre, awards }) => (
+                  <TableMovieItem
+                    key={id}
+                    title={title}
+                    length={length}
+                    rating={rating}
+                    genre={genre}
+                    awards={awards}
+                  />
+                ))}
+              </tbody>
+            </Table>
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
   );
 };

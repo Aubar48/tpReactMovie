@@ -7,6 +7,16 @@ export const TableMovieItem = ({ title, length, rating, genre, awards }) => {
       <td> {rating ? rating : "Not Rating"} </td>
       <td> {genre ? genre.name : "Not Genre"} </td>
       <td> {awards ? awards : "Not Awards"} </td>
+      <td>
+        <div className="d-flex">
+          <button className="btn btn-sm btn-outline-success mr-3">
+            <i className="fas fa fa-pencil-alt"></i>
+          </button>
+          <button className="btn btn-sm btn-outline-danger">
+            <i className="fas fa fa-trash-alt"></i>
+          </button>
+        </div>
+      </td>
     </tr>
   );
 };
@@ -19,7 +29,6 @@ TableMovieItem.propTypes = {
   }),
   awards: PropTypes.number,
 };
-
 
 TableMovieItem.defaultProps = {
   genre: {},
