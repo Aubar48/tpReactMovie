@@ -22,5 +22,5 @@ TableMovieItem.propTypes = {
 
 
 TableMovieItem.defaultProps = {
-  genre: "Sin género asignado",
+  genre: {},
 };
