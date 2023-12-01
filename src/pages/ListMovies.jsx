@@ -8,6 +8,7 @@ import { FormSearch } from "../components/formSearch/FormSearch";
 import { FormMovies } from "../components/formMovies/FormMovies";
 import { SweetAlertToast } from "../components/sweetAlertToast/SweetAlertToast";
 export const ListMovies = () => {
+  const [movie, setMovie] = useState(null);
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState();
@@ -47,6 +48,18 @@ export const ListMovies = () => {
       response.ok
         ? SweetAlertToast(result.message)
         : SweetAlertToast(result.message, "error");
+
+      getMovies();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEdditMovie = async (id, endpoint = "/api/v1/movies") => {
+    try {
+      const reponse = await fetch(`http://localhost:3001${endpoint}/${id}`);
+      const result = await reponse.json();
+      result.ok && setMovie(result.data);
     } catch (error) {
       console.log(error);
     }
@@ -58,10 +71,14 @@ export const ListMovies = () => {
     <Row>
       <Col sm={12} md={8} lg={4}>
         <Card.Header>
-          <Card.Title>Add Movie</Card.Title>
+          <Card.Title> {movie ? "Edit" : "Add"} Movie</Card.Title>
         </Card.Header>
         <Card.Body>
-          <FormMovies handleAddMovie={handleAddMovie} />
+          <FormMovies
+            handleAddMovie={handleAddMovie}
+            movie={movie}
+            setMovie={setMovie}
+          />
         </Card.Body>
       </Col>
       <Col sm={12} md={10} lg={8}>
@@ -86,14 +103,11 @@ export const ListMovies = () => {
                 </tr>
               </thead>
               <tbody>
-                {movies.map(({ id, title, length, rating, genre, awards }) => (
+                {movies.map((movie) => (
                   <TableMovieItem
-                    key={id}
-                    title={title}
-                    length={length}
-                    rating={rating}
-                    genre={genre}
-                    awards={awards}
+                    key={movie.id}
+                    movie={movie}
+                    handleEdditMovie={handleEdditMovie}
                   />
                 ))}
               </tbody>
