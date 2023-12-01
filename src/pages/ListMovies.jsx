@@ -6,6 +6,7 @@ import { Loading } from "./../components/loading/Loading";
 import { Paginator } from "../components/paginator/Paginator";
 import { FormSearch } from "../components/formSearch/FormSearch";
 import { FormMovies } from "../components/formMovies/FormMovies";
+import { SweetAlertToast } from "../components/sweetAlertToast/SweetAlertToast";
 export const ListMovies = () => {
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +44,9 @@ export const ListMovies = () => {
         body: JSON.stringify(data),
       });
       const result = await response.json();
-      console.log(result);
+      response.ok
+        ? SweetAlertToast(result.message)
+        : SweetAlertToast(result.message, "error");
     } catch (error) {
       console.log(error);
     }

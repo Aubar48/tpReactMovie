@@ -24,7 +24,6 @@ export const FormMovies = ({ handleAddMovie }) => {
       genre_id: "",
     },
     onSubmit: (values) => {
-      console.log(values);
       handleAddMovie(values);
     },
   });
