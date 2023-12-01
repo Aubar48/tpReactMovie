@@ -32,6 +32,23 @@ export const ListMovies = () => {
     event.preventDefault();
     getMovies(endpoint);
   };
+
+  const handleAddMovie = async (data, endpoint = "/api/v1/movies") => {
+    try {
+      const response = await fetch(`http://localhost:3001${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return loading ? (
     <Loading />
   ) : (
@@ -41,13 +58,13 @@ export const ListMovies = () => {
           <Card.Title>Add Movie</Card.Title>
         </Card.Header>
         <Card.Body>
-          <FormMovies />
+          <FormMovies handleAddMovie={handleAddMovie} />
         </Card.Body>
       </Col>
       <Col sm={12} md={10} lg={8}>
         <Card className="shadow mb-5">
           <Card.Body>
-            <div className="d-flex flex-column flex-nowrap flex-lg-row justify-content-between">
+            <div className="d-flex flex-column flex-nowrap flex-xl-row justify-content-between">
               <FormSearch getMovies={getMovies} />
               <Paginator
                 pagination={pagination}
