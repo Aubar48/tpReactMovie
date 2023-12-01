@@ -1,14 +1,16 @@
+import { useEffect, useState } from "react";
+
 export const GenreInDb = () => {
-  const genresArray = [
-    "Action",
-    "Comedia",
-    "animation",
-    "Aventuras",
-    "Drama",
-    "Ciencia Fictión",
-    "Fantasia",
-    "Musical",
-  ];
+  const [genres, setGenres] = useState([]);
+  const getGenres = async () => {
+    let response = await fetch(`http://localhost:3001/api/v1/genres`);
+    let result = await response.json();
+  
+    setGenres(result.data);
+  };
+  useEffect(() => {
+    getGenres();
+  }, []);
   return (
     <div className="col-lg-6 mb-4">
       <div className="card shadow mb-4">
@@ -19,10 +21,10 @@ export const GenreInDb = () => {
         </div>
         <div className="card-body">
           <div className="row">
-            {genresArray.map((genre, index) => (
+            {genres.map((genre, index) => (
               <div key={index} className="col-lg-6 mb-4">
                 <div className="card bg-dark text-white shadow">
-                  <div className="card-body">{genre}</div>
+                  <div className="card-body">{genre.name}</div>
                 </div>
               </div>
             ))}

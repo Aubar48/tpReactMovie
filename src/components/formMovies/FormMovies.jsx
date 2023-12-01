@@ -1,24 +1,69 @@
-export const FormMovies = () => {
+import { useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
+
+export const FormMovies =  () => {
+
+  const [genres, setGenres] = useState([]);
+  const getGenres = async () => {
+    let response = await fetch(`http://localhost:3001/api/v1/genres`);
+    let result = await response.json();
+  
+    setGenres(result.data);
+  };
+  useEffect(() => {
+    getGenres();
+  }, []);
+
   return (
     <>
-      <form className="form-floating mb-3">
-        <label htmlFor="floatingInput">Title</label>
-        <input
-          type="text"
-          className="form-control"
-          id="floatingInputTitle"
-          value="Movie title"
-        />
-
-        <div className="mb-3">
-          <label htmlFor="floatingInput">Rating</label>
-          <input
-            type="number"
+      <Form className="row">
+        <Form.Group className="mb-3 col-12">
+          <Form.Label>Title</Form.Label>
+          <Form.Control
+            type="text"
             className="form-control"
-            id="floatingInputRating"
+            defaultValue="Movie title"
           />
-        </div>
-      </form>
+        </Form.Group>
+
+        <Form.Group className="mb-3 col-12 col-md-6">
+          <Form.Label>Rating</Form.Label>
+          <Form.Control type="number" className="form-control" />
+        </Form.Group>
+
+        <Form.Group className="mb-3 col-12 col-md-6">
+          <Form.Label>Awards</Form.Label>
+          <Form.Control type="number" className="form-control" />
+        </Form.Group>
+
+        <Form.Group className="mb-3 col-12 col-md-6">
+          <Form.Label>Length</Form.Label>
+          <Form.Control type="number" className="form-control" />
+        </Form.Group>
+
+        <Form.Group className="mb-3 col-12 col-md-6">
+          <Form.Label>Release date</Form.Label>
+          <Form.Control type="date" className="form-control" />
+        </Form.Group>
+
+        <Form.Group className="mb-3 col-12">
+          <Form.Label>Genre</Form.Label>
+          <Form.Select className="form-control" defaultValue="">
+            <option >
+              Select Genre
+            </option>
+            {genres.map(({ name, id }) => (
+              <option key={id} value={id}>{name}</option>
+            ))}
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-3 col-12">
+          <Button variant="outline-dark" className="w-100" type="submit">
+            Save
+          </Button>
+        </Form.Group>
+      </Form>
     </>
   );
 };
