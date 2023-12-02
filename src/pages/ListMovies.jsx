@@ -7,6 +7,7 @@ import { Paginator } from "../components/paginator/Paginator";
 import { FormSearch } from "../components/formSearch/FormSearch";
 import { FormMovies } from "../components/formMovies/FormMovies";
 import { SweetAlertToast } from "../components/sweetAlertToast/SweetAlertToast";
+import Swal from "sweetalert2";
 export const ListMovies = () => {
   const [movie, setMovie] = useState(null);
   const [movies, setMovies] = useState([]);
@@ -77,17 +78,48 @@ export const ListMovies = () => {
       const result = await response.json();
       if (response.ok) {
         // Manejar la respuesta exitosa
+        SweetAlertToast(result.message);
         setMovies(
           movies.map((movie) => (movie.id === id ? result.data : movie))
         );
-        setMovie(null)
+        setMovie(null);
+      } else {
+        SweetAlertToast(result.message, "error");
       }
-      response.ok
-        ? SweetAlertToast(result.message)
-        : SweetAlertToast(result.message, "error");
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleDeleteMovie = async (id, endpoint = "/api/v1/movies") => {
+    Swal.fire({
+      title: "Are you sure you want to delete the movie?",
+      showDenyButton: true,
+      confirmButtonText: "Delete",
+      denyButtonText: `Don't Delete`,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const response = await fetch(
+            `http://localhost:3001${endpoint}/${id}`,
+            {
+              method: "DELETE",
+            }
+          );
+          const result = await response.json();
+          if (response.ok) {
+            SweetAlertToast(result.message);
+            setMovies(movies.filter((movie) => movie.id !== id));
+          } else {
+            SweetAlertToast(result.message, "error");
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
   };
 
   return loading ? (
@@ -134,6 +166,7 @@ export const ListMovies = () => {
                     key={movie.id}
                     movie={movie}
                     handleEdditMovie={handleEdditMovie}
+                    handleDeleteMovie={handleDeleteMovie}
                   />
                 ))}
               </tbody>
