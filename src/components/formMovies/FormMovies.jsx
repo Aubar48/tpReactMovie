@@ -1,8 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { useFormik } from "formik";
 import { PropTypes } from "prop-types";
-export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
+import { validate } from "./../../validations/formMoviesValidation";
+export const FormMovies = ({
+  handleAddMovie,
+  handleUpdateMovie,
+  movie,
+  setMovie,
+}) => {
   const [genres, setGenres] = useState([]);
   const getGenres = async (endpoint = "/api/v1/genres") => {
     let response = await fetch(`http://localhost:3001${endpoint}`);
@@ -14,19 +21,32 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
     getGenres();
   }, []);
 
+  useEffect(() => {
+    if (movie) {
+      formik.setValues({
+        title: movie.title ? movie.title : "Not Title",
+        rating: movie.rating ? movie.rating : 0,
+        awards: movie.awards ? movie.awards : 0,
+        release_date: movie.release_date ? movie.release_date : "",
+        length: movie.length ? movie.length : 0,
+        genre_id: movie.genre_id ? movie.genre_id : "Not Genre",
+      });
+    }
+  }, [movie]);
+
   const formik = useFormik({
     initialValues: {
-      title: movie ? movie.title : "",
-      rating: movie ? movie.rating : "",
-      awards: movie ? movie.awards : "",
-      release_date: movie ? movie.release_date : "",
-      length: movie ? movie.length : "",
-      genre_id: movie ? movie.genre_id : "",
+      title: "",
+      rating: "",
+      awards: "",
+      release_date: "",
+      length: "",
+      genre_id: "",
     },
+    validate,
     onSubmit: (values) => {
-      movie ? alert("actualizando") : alert("error");
-
-      handleAddMovie(values);
+      movie ? handleUpdateMovie(movie.id, values) : handleAddMovie(values);
+      formik.handleReset();
     },
   });
 
@@ -46,8 +66,11 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
             id="title"
             name="title"
             onChange={formik.handleChange}
-            value={movie ? movie.title : formik.values.title}
+            value={formik.values.title}
           />
+          {formik.errors.title && (
+            <small className="text-danger"> {formik.errors.title} </small>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3 col-12 col-md-6">
@@ -58,8 +81,11 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
             id="rating"
             name="rating"
             onChange={formik.handleChange}
-            value={movie ? movie.rating : formik.values.rating}
+            value={formik.values.rating}
           />
+          {formik.errors.rating && (
+            <small className="text-danger"> {formik.errors.rating} </small>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3 col-12 col-md-6">
@@ -70,8 +96,11 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
             id="awards"
             name="awards"
             onChange={formik.handleChange}
-            value={movie ? movie.awards : formik.values.awards}
+            value={formik.values.awards}
           />
+          {formik.errors.awards && (
+            <small className="text-danger"> {formik.errors.awards} </small>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3 col-12 col-md-6">
@@ -82,8 +111,11 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
             id="length"
             name="length"
             onChange={formik.handleChange}
-            value={movie ? movie.length : formik.values.length}
+            value={formik.values.length}
           />
+          {formik.errors.length && (
+            <small className="text-danger"> {formik.errors.length} </small>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3 col-12 col-md-6">
@@ -94,8 +126,14 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
             id="release_date"
             name="release_date"
             onChange={formik.handleChange}
-            value={movie ? movie.release_date : formik.values.release_date.toString()}
+            value={formik.values.release_date.split("T")[0].toString()}
           />
+          {formik.errors.release_date && (
+            <small className="text-danger">
+              {" "}
+              {formik.errors.release_date}{" "}
+            </small>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3 col-12">
@@ -105,7 +143,7 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
             id="genre_id"
             name="genre_id"
             onChange={formik.handleChange}
-            value={movie ? movie.genre_id : formik.values.genre_id}
+            value={formik.values.genre_id}
           >
             <option defaultChecked>Select Genre</option>
             {genres.map(({ name, id }) => (
@@ -114,6 +152,9 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
               </option>
             ))}
           </Form.Select>
+          {formik.errors.genre_id && (
+            <small className="text-danger"> {formik.errors.genre_id} </small>
+          )}
         </Form.Group>
 
         <Form.Group className="mb-3 col-12 ">
@@ -136,6 +177,7 @@ export const FormMovies = ({ handleAddMovie, movie, setMovie }) => {
 };
 FormMovies.propTypes = {
   handleAddMovie: PropTypes.func,
+  handleUpdateMovie: PropTypes.func,
   movie: PropTypes.object,
   setMovie: PropTypes.func,
 };

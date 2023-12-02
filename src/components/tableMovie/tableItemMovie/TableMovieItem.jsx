@@ -33,4 +33,6 @@ TableMovieItem.propTypes = {
 
 TableMovieItem.defaultProps = {
   genre: {},
+  title: "Not Title",
+  length: 0,
 };

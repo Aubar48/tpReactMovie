@@ -65,6 +65,31 @@ export const ListMovies = () => {
     }
   };
 
+  const handleUpdateMovie = async (id, data, endpoint = "/api/v1/movies") => {
+    try {
+      const response = await fetch(`http://localhost:3001${endpoint}/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        // Manejar la respuesta exitosa
+        setMovies(
+          movies.map((movie) => (movie.id === id ? result.data : movie))
+        );
+        setMovie(null)
+      }
+      response.ok
+        ? SweetAlertToast(result.message)
+        : SweetAlertToast(result.message, "error");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return loading ? (
     <Loading />
   ) : (
@@ -78,6 +103,7 @@ export const ListMovies = () => {
             handleAddMovie={handleAddMovie}
             movie={movie}
             setMovie={setMovie}
+            handleUpdateMovie={handleUpdateMovie}
           />
         </Card.Body>
       </Col>
